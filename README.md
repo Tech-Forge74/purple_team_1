@@ -1,7 +1,7 @@
 # PURPLE — Round 2 Submission
 
 ## 1. Team Name
-[Enter your team name]
+Celtics
 
 
 
@@ -9,44 +9,42 @@
 
 **Problem Statement:**
 
-[Describe the problem statement your team is addressing.]
+Friends frequently struggle to track shared group expenses accurately during trips or outings, leading to confusing multi-person repayments. Even after debts are calculated, people often feel awkward repeatedly asking friends to return small amounts of money, causing delayed or forgotten settlements.
 
 **Proposed Solution:**
 
-[Briefly explain your proposed solution and how it addresses the problem.]
+**FairSplit – MomPay** is a native Android application (Kotlin + Jetpack Compose + Material 3) with a dual personality that solves both sides of group expense friction completely offline:
+1. **FairSplit (Smart Fintech Ledger):** Tracks squad expenses, persists data locally with `SharedPreferences`, and runs an exact integer-paise **Minimum Cash Flow** greedy algorithm to reduce messy group repayments into the minimum number of transfers.
+2. **MomPay (Satirical Maternal Escalation):** Turns awkward payment reminders into a humorous two-phone escalation workflow—allowing a sender (Phone A) to prepare a real carrier SMS (`MOMPAY1:` Base64URL payload via Android's native `ACTION_SENDTO` composer) to a debtor's mother (Phone B), who pastes it into **Mom Receiver Mode** to trigger a simulated incoming call with a personalized Android `TextToSpeech` reminder.
 
 
 
 ## 3. Selected Features
 
-Your prototype must prioritize the functional implementation of **two selected features**. Other features may be represented through static UI elements and do not require functional implementation.
+### Feature 1: Smart Settlement Engine (Minimum Cash Flow Algorithm & Expense Management)
 
-### Feature 1: [Feature Name]
+FairSplit provides full offline group expense tracking and an exact **Minimum Cash Flow** settlement engine (`SettlementCalculator` and `ExpenseCalculator`):
+- Uses **64-bit integer `Long` paise arithmetic** (no floating-point rounding drift) with deterministic remainder distribution across participants.
+- Supports adding new expenses (with title, rupee amount, payer selection, participant multi-select, **"Split Equally"**, and input validation), deleting expenses, and restoring the preloaded **Goa Trip – Squad** dataset via **Reset Demo**.
+- Dynamically computes each member's total paid, total share, net balance, a **Before vs. After** repayment comparison, settlement progress (`₹0` remaining unsettled), and optimized transfer cards.
 
-[Briefly elaborate on the feature, its purpose, and its expected functionality.]
+### Feature 2: Two-Phone SMS-Based MomPay Escalation & Simulated Voice Call
 
-### Feature 2: [Feature Name]
-
-[Briefly elaborate on the feature, its purpose, and its expected functionality.]
+MomPay enables a live two-phone demonstration using standard carrier SMS without requiring internet, cloud backends, or sensitive Android permissions:
+- **Phone A (Sender):** Saves Mother's name and Indian mobile number locally (without requesting `READ_CONTACTS`), tracks a 24-hour grace period (plus a **Demo Mode** overdue toggle), and launches the system SMS app via `Intent.ACTION_SENDTO` (`smsto:`) with a `MOMPAY1:<BASE64URL>` invitation token prefilled. Includes an explicit **"I HAVE SENT THE SMS"** sender confirmation.
+- **Phone B (Receiver):** **Mom Receiver Mode** lets the receiver paste the SMS from clipboard, extracts and validates the `MOMPAY1:` payload (checking version, required fields, positive amount, and expiry), previews the details, and—only upon explicit **ACCEPT MOMPAY CALL**—displays a **SIMULATED AI VOICE CALL** screen with default ringtone/vibration and Android `TextToSpeech` (`en-IN` with default locale fallback) plus **MUTE / UNMUTE**, **REPLAY**, and **END CALL** controls.
 
 
 
 ## 4. Setup & Running Instructions
 
-[Provide clear, step-by-step instructions to install dependencies, configure the project if necessary, and run the prototype locally.]
+### Prerequisites
+- **Android Studio** (Ladybug or newer) with **Android SDK Platform 36** (`minSdk = 26`, `targetSdk = 36`) and **JDK 11+**.
+- For the two-phone live demonstration: **two physical Android phones** (Android 8.0 / API 26+) with SIM cards / carrier SMS enabled. (No Wi-Fi, internet, Firebase, or API keys are required.)
 
-
-
-## 5. Feature Demonstration
-
-Provide step-by-step instructions for accessing and testing each of your two selected features.
-
-### Feature 1: [Feature Name]
-1. [Steps to access the feature.]
-2. [Steps to test its functionality.]
-3. [Expected outcome.]
-
-### Feature 2: [Feature Name]
-1. [Steps to access the feature.]
-2. [Steps to test its functionality.]
-3. [Expected outcome.]
+### Build & Run Locally
+1. Clone or unzip the project repository and open it in **Android Studio**.
+2. Wait for Gradle sync to finish (all dependencies are standard AndroidX, Material 3, Jetpack Compose, and Coroutines—no external API keys or `local.properties` secrets are needed).
+3. To build the debug APK from the terminal:
+   ```bash
+   gradle :app:assembleDebug
